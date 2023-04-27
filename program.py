@@ -13,21 +13,29 @@ class Action(enum.Enum):
 
 class Condition(abc.ABC):
     @abc.abstractmethod
-    def evaluate(self):
+    def evaluate(self, robot, board):
         pass
 
 class TrueCondition(Condition):
-    def evaluate(self): return True
+    def evaluate(self, robot, board): return True
 
 class FalseCondition(Condition):
-    def evaluate(self): return False
+    def evaluate(self, robot, board): return False
+
+class IsSourceCondition(Condition):
+    def evaluate(self, robot, board):
+        return robot.position in board.sources
+
+class IsSinkCondition(Condition):
+    def evaluate(self, robot, board):
+        return robot.position in board.sinks
 
 @dataclasses.dataclass
-class Foo():
+class StateDefinition():
     action: Action
     condition: Condition
     next_state: int
 
 @dataclasses.dataclass
 class Program():
-    foos: list[Foo]
+    state_definitions: list[StateDefinition]
